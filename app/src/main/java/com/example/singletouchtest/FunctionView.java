@@ -44,7 +44,7 @@ public class FunctionView extends PopupWindow implements View.OnClickListener{
         //this.setWidth((int)(d.widthPixels * 0.35));
         this.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
         this.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
-        this.setFocusable(true);
+        this.setFocusable(false);
         this.setOutsideTouchable(true);
         this.update();
 
