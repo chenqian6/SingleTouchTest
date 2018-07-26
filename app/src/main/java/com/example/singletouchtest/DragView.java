@@ -19,7 +19,8 @@ import java.util.List;
  * Created by Robert on 2017/6/21.
  */
 
-public class DragView extends RelativeLayout implements MoveLayout.DeleteMoveLayout{
+//public class DragView extends RelativeLayout implements MoveLayout.DeleteMoveLayout{
+public class DragView extends RelativeLayout {
 
     private static final String TAG = "DragView";
 
@@ -41,11 +42,11 @@ public class DragView extends RelativeLayout implements MoveLayout.DeleteMoveLay
     private int mMinHeight = 120;
     private int mMinWidth  = 180;
 
-    private boolean mIsAddDeleteView = false;
-    private TextView deleteArea;
+//    private boolean mIsAddDeleteView = false;
+//    private TextView deleteArea;
 
-    private int DELETE_AREA_WIDTH = 180;
-    private int DELETE_AREA_HEIGHT = 90;
+//    private int DELETE_AREA_WIDTH = 180;
+//    private int DELETE_AREA_HEIGHT = 90;
 
 
     public DragView(Context context) {
@@ -79,7 +80,7 @@ public class DragView extends RelativeLayout implements MoveLayout.DeleteMoveLay
             int count = mMoveLayoutList.size();
             for (int a = 0; a < count; a ++) {
                 mMoveLayoutList.get(a).setViewWidthHeight(mSelfViewWidth, mSelfViewHeight);
-                mMoveLayoutList.get(a).setDeleteWidthHeight(DELETE_AREA_WIDTH, DELETE_AREA_HEIGHT);
+//                mMoveLayoutList.get(a).setDeleteWidthHeight(DELETE_AREA_WIDTH, DELETE_AREA_HEIGHT);
             }
         }
 
@@ -100,14 +101,16 @@ public class DragView extends RelativeLayout implements MoveLayout.DeleteMoveLay
         mMinWidth = width;
     }
 
-    public void addDragView(View selfView, int left, int top , int right, int bottom, boolean isFixedSize, boolean whitebg) {
+    public void addDragView(View selfView, int left, int top , int right, int bottom,
+                            boolean isFixedSize, boolean whitebg) {
         addDragView(selfView, left, top , right, bottom,  isFixedSize,  whitebg,  mMinWidth,  mMinHeight);
     }
 
     /**
      * 每个moveLayout都可以拥有自己的最小尺寸
      */
-    public void addDragView(int resId, int left, int top ,int right, int bottom, boolean isFixedSize, boolean whitebg, int minwidth, int minheight) {
+    public void addDragView(int resId, int left, int top ,int right, int bottom,
+                            boolean isFixedSize, boolean whitebg, int minwidth, int minheight) {
         LayoutInflater inflater2 = LayoutInflater.from(mContext);
         View selfView = inflater2.inflate(resId, null);
         addDragView(selfView, left, top , right, bottom, isFixedSize, whitebg,minwidth, minheight);
@@ -116,11 +119,12 @@ public class DragView extends RelativeLayout implements MoveLayout.DeleteMoveLay
     /**
      * 每个moveLayout都可以拥有自己的最小尺寸
      */
-    public void addDragView(View selfView, int left, int top , int right, int bottom, boolean isFixedSize, boolean whitebg, int minwidth, int minheight) {
+    public void addDragView(View selfView, int left, int top , int right, int bottom,
+                            boolean isFixedSize, boolean whitebg, int minwidth, int minheight) {
      //    invalidate();
       //  Log.e(TAG, "addDragView: height="+getHeight() +"   width+"+ getWidth() );
 
-        MoveLayout moveLayout = new MoveLayout(mContext);
+        MoveLayout moveLayout = new MoveLayout(mContext, this);
 
         moveLayout.setClickable(true);
         moveLayout.setMinHeight(minheight);
@@ -152,48 +156,49 @@ public class DragView extends RelativeLayout implements MoveLayout.DeleteMoveLay
         //set fixed size
         moveLayout.setFixedSize(isFixedSize);
 
-        moveLayout.setOnDeleteMoveLayout(this);
+//        moveLayout.setOnDeleteMoveLayout(this);
         moveLayout.setIdentity(mLocalIdentity++);
 
-        if (mIsAddDeleteView == false) {
-            //add delete area
-            deleteArea = new TextView(mContext);
-            deleteArea.setText("delete");
-            deleteArea.setBackgroundColor(Color.argb(99,0xbb,0,0));
-            RelativeLayout.LayoutParams dellayout = new RelativeLayout.LayoutParams(DELETE_AREA_WIDTH, DELETE_AREA_HEIGHT);
-            dellayout.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-            dellayout.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-            deleteArea.setLayoutParams(dellayout);
-            deleteArea.setGravity(Gravity.CENTER);
-            // moveLayout.setDeleteWidthHeight(180, 90);
-            deleteArea.setVisibility(View.INVISIBLE);
-            addView(deleteArea);
-        }
+//        if (mIsAddDeleteView == false) {
+//            //add delete area
+//            deleteArea = new TextView(mContext);
+//            deleteArea.setText("delete");
+//            deleteArea.setBackgroundColor(Color.argb(99,0xbb,0,0));
+//            RelativeLayout.LayoutParams dellayout = new RelativeLayout.LayoutParams(DELETE_AREA_WIDTH, DELETE_AREA_HEIGHT);
+//            dellayout.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+//            dellayout.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+//            deleteArea.setLayoutParams(dellayout);
+//            deleteArea.setGravity(Gravity.CENTER);
+//            // moveLayout.setDeleteWidthHeight(180, 90);
+//            deleteArea.setVisibility(View.INVISIBLE);
+//            addView(deleteArea);
+//        }
 
         //set view to get control
-        moveLayout.setDeleteView(deleteArea);
+//        moveLayout.setDeleteView(deleteArea);
 
         addView(moveLayout);
 
         mMoveLayoutList.add(moveLayout);
     }
 
-    public void addDragView(int resId, int left, int top ,int right, int bottom, boolean isFixedSize, boolean whitebg) {
+    public void addDragView(int resId, int left, int top ,int right, int bottom,
+                            boolean isFixedSize, boolean whitebg) {
         LayoutInflater inflater2 = LayoutInflater.from(mContext);
         View selfView = inflater2.inflate(resId, null);
         addDragView(selfView, left, top , right, bottom, isFixedSize, whitebg);
     }
 
-    @Override
-    public void onDeleteMoveLayout(int identity) {
-        int count = mMoveLayoutList.size();
-        for (int a = 0; a < count; a ++) {
-            if (mMoveLayoutList.get(a).getIdentity() == identity) {
-                //delete
-                removeView(mMoveLayoutList.get(a));
-            }
-        }
-    }
+//    @Override
+//    public void onDeleteMoveLayout(int identity) {
+//        int count = mMoveLayoutList.size();
+//        for (int a = 0; a < count; a ++) {
+//            if (mMoveLayoutList.get(a).getIdentity() == identity) {
+//                //delete
+//                removeView(mMoveLayoutList.get(a));
+//            }
+//        }
+//    }
 
 //
 //    /**

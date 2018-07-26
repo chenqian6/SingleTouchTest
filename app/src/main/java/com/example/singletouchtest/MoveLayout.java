@@ -1,12 +1,17 @@
 package com.example.singletouchtest;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.FocusFinder;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 /**
  * Created by Robert on 2017/6/20.
@@ -14,15 +19,17 @@ import android.widget.RelativeLayout;
 
 public class MoveLayout extends RelativeLayout {
 
+    private FunctionView functionView;//功能视图：删除、置顶等
+
     private int dragDirection = 0;
     private static final int TOP = 0x15;
     private static final int LEFT = 0x16;
     private static final int BOTTOM = 0x17;
     private static final int RIGHT = 0x18;
-    private static final int LEFT_TOP = 0x11;
-    private static final int RIGHT_TOP = 0x12;
-    private static final int LEFT_BOTTOM = 0x13;
-    private static final int RIGHT_BOTTOM = 0x14;
+//    private static final int LEFT_TOP = 0x11;
+//    private static final int RIGHT_TOP = 0x12;
+//    private static final int LEFT_BOTTOM = 0x13;
+//    private static final int RIGHT_BOTTOM = 0x14;
     private static final int CENTER = 0x19;
 
 
@@ -53,24 +60,30 @@ public class MoveLayout extends RelativeLayout {
     private int minWidth= 180;
     private static final String TAG = "MoveLinearLayout";
 
+    private Context context;
+    private DragView dragView;
 
-    public MoveLayout(Context context) {
-        super(context);
+
+    public MoveLayout(Context context, DragView dragView) {
+        super(context,null);
+        this.dragView = dragView;
+        this.context = context;
         init();
     }
 
-    public MoveLayout(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-        init();
-    }
-
-    public MoveLayout(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init();
-
-    }
+//    public MoveLayout(Context context, @Nullable AttributeSet attrs) {
+//        this(context, attrs,0);
+//    }
+//
+//    public MoveLayout(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+//        super(context, attrs, defStyleAttr);
+//        this.context = context;
+//        init();
+//    }
 
     private void init() {
+        functionView = new FunctionView(context, dragView,this);
+
         screenHeight = 500;//getResources().getDisplayMetrics().heightPixels - 40;
         screenWidth = 500;// getResources().getDisplayMetrics().widthPixels;
     }
@@ -100,18 +113,19 @@ public class MoveLayout extends RelativeLayout {
         mFixedSize = b;
     }
 
-    private int mDeleteHeight = 0;
-    private int mDeleteWidth = 0;
-    private boolean isInDeleteArea = false;
-    public void setDeleteWidthHeight(int width, int height) {
-        mDeleteWidth = screenWidth - width;
-        mDeleteHeight = height;
-    }
+//    private int mDeleteHeight = 0;
+//    private int mDeleteWidth = 0;
+//    private boolean isInDeleteArea = false;
+//    public void setDeleteWidthHeight(int width, int height) {
+//        mDeleteWidth = screenWidth - width;
+//        mDeleteHeight = height;
+//    }
 
 
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        functionView.showAtBottom(((Activity)context).findViewById(R.id.button));
         int action = event.getAction();
         switch (action) {
             case MotionEvent.ACTION_DOWN:
@@ -132,7 +146,7 @@ public class MoveLayout extends RelativeLayout {
                 spotR = false;
                 spotB = false;
                 requestLayout();
-                mDeleteView.setVisibility(View.INVISIBLE);
+//                mDeleteView.setVisibility(View.INVISIBLE);
                // invalidate();
                 break;
 //            case MotionEvent.ACTION_CANCEL:
@@ -198,6 +212,7 @@ public class MoveLayout extends RelativeLayout {
         return super.onTouchEvent(event);
     }
 
+
     /**
      * 触摸点为中心->>移动
      */
@@ -229,17 +244,17 @@ public class MoveLayout extends RelativeLayout {
         oriRight = right;
         oriBottom = bottom;
 
-        //todo: show delete icon
-        mDeleteView.setVisibility(View.VISIBLE);
-        //do delete
-        if(isInDeleteArea == false && oriRight > mDeleteWidth && oriTop < mDeleteHeight) {//delete
-            Log.e(TAG, "center: oriRight"+oriRight+  "  mDeleteWidth"+mDeleteWidth  +"  oriTop"+ oriTop+ "  mDeleteHeightv"+ mDeleteHeight);
-            if(mListener != null) {
-                mListener.onDeleteMoveLayout(identity);
-                mDeleteView.setVisibility(View.INVISIBLE);
-                isInDeleteArea = true;//this object is deleted ,only one-time-using
-            }
-        }
+//        //todo: show delete icon
+//        mDeleteView.setVisibility(View.VISIBLE);
+//        //do delete
+//        if(isInDeleteArea == false && oriRight > mDeleteWidth && oriTop < mDeleteHeight) {//delete
+//            Log.e(TAG, "center: oriRight"+oriRight+  "  mDeleteWidth"+mDeleteWidth  +"  oriTop"+ oriTop+ "  mDeleteHeightv"+ mDeleteHeight);
+//            if(mListener != null) {
+//                mListener.onDeleteMoveLayout(identity);
+//                mDeleteView.setVisibility(View.INVISIBLE);
+//                isInDeleteArea = true;//this object is deleted ,only one-time-using
+//            }
+//        }
 
     }
 
@@ -392,18 +407,17 @@ public class MoveLayout extends RelativeLayout {
     }
 
     //set the main delete area object (to change visibility)
-    private View mDeleteView = null;
-    public void setDeleteView(View v) {
-        mDeleteView = v;
-    }
+//    private View mDeleteView = null;
+//    public void setDeleteView(View v) {
+//        mDeleteView = v;
+//    }
 
     //delete listener
-    private DeleteMoveLayout mListener = null;
-    public interface DeleteMoveLayout {
-        void onDeleteMoveLayout(int identity);
-    }
-    public void setOnDeleteMoveLayout(DeleteMoveLayout l) {
-        mListener = l;
-    }
-
+//    private DeleteMoveLayout mListener = null;
+//    public interface DeleteMoveLayout {
+//        void onDeleteMoveLayout(int identity);
+//    }
+//    public void setOnDeleteMoveLayout(DeleteMoveLayout l) {
+//        mListener = l;
+//    }
 }
