@@ -12,6 +12,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="添加图片" />
+    <Button
+        android:id="@+id/saved"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="保存图片"/>
 
     <com.example.singletouchtest.DragView
         android:id="@+id/dragview"
